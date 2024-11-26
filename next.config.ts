@@ -1,5 +1,9 @@
 import { NextConfig } from 'next';
 
-const config: NextConfig = {};
+const config: NextConfig = {
+  images: {
+    remotePatterns: [{ hostname: 'images.unsplash.com' }],
+  },
+};
 
 export default config;

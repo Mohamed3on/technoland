@@ -13,6 +13,8 @@ interface City {
 
 interface CityData extends City {
   medianSalary: number;
+  netSalary: number;
+  taxRate: number;
   techCityIndex: number;
 }
 
@@ -20,10 +22,21 @@ interface SalaryData {
   medianSalary: number;
 }
 
-// Data fetching
+interface TaxRates {
+  [country: string]: number;
+}
+
+interface CostOfLivingData {
+  [key: string]: {
+    city: string;
+    country: string;
+    index: number;
+  };
+}
+
 async function getCityData(cityId: string): Promise<SalaryData> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/salary/${cityId}`, {
-    next: { revalidate: 3600 }, // Cache for 1 hour
+    next: { revalidate: 24 * 60 * 60 },
   });
   if (!response.ok) {
     throw new Error(`Failed to fetch salary data for ${cityId}`);
@@ -31,8 +44,36 @@ async function getCityData(cityId: string): Promise<SalaryData> {
   return response.json();
 }
 
-function calculateTechCityIndex(salary: number, costIndex: number, nycSalary: number): number {
-  return (salary / nycSalary / (costIndex / 100)) * 100;
+async function getTaxRates(): Promise<TaxRates> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/tax-rates`, {
+    next: { revalidate: 0 },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch tax rates');
+  }
+  return response.json();
+}
+
+async function getCostOfLivingIndices(): Promise<CostOfLivingData> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/cost-of-living`, {
+    next: { revalidate: 24 * 60 * 60 },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch cost of living indices');
+  }
+  return response.json();
+}
+
+function calculateTechCityIndex(
+  grossSalary: number,
+  costIndex: number,
+  nycNetSalary: number,
+  taxRate: number
+): number {
+  const netSalary = grossSalary * (1 - taxRate / 100);
+  const cityPurchasingPower = netSalary / (costIndex / 100);
+  const nycPurchasingPower = nycNetSalary / (100 / 100);
+  return (cityPurchasingPower / nycPurchasingPower) * 100;
 }
 
 // Server Components
@@ -67,24 +108,35 @@ function CitiesGrid({ cities }: { cities: CityData[] }) {
 
 // Main component
 export default async function Home() {
-  const nycData = await getCityData('newYork');
-  const citiesData = await Promise.all(
-    Object.entries(cities).map(async ([key, city]) => {
-      const salaryData = key === 'newYork' ? nycData : await getCityData(key);
-      return {
-        ...city,
-        medianSalary: salaryData.medianSalary,
-        techCityIndex:
-          key === 'newYork'
-            ? 100
-            : calculateTechCityIndex(
-                salaryData.medianSalary,
-                city.costOfLivingIndex,
-                nycData.medianSalary
-              ),
-      };
-    })
-  );
+  const [taxRates, costOfLivingData, ...citiesData] = await Promise.all([
+    getTaxRates(),
+    getCostOfLivingIndices(),
+    ...Object.entries(cities).map(([key, city]) => getCityData(key)),
+  ]);
+
+  // Find NYC data from the results
+  const nycData = citiesData[Object.keys(cities).indexOf('new-york')];
+  const nycNetSalary = nycData.medianSalary * (1 - taxRates['united states'] / 100);
+
+  // Process cities data without image fields
+  const processedCitiesData = Object.entries(cities).map(([key, city], index) => {
+    const salaryData = citiesData[index];
+    const taxRate = taxRates[city.country.toLowerCase()] || 0;
+    const grossSalary = salaryData.medianSalary;
+    const netSalary = grossSalary * (1 - taxRate / 100);
+
+    const costLookupKey = `${city.name.toLowerCase()}-${city.country.toLowerCase()}`;
+    const costIndex = costOfLivingData[costLookupKey]?.index || city.costOfLivingIndex;
+
+    return {
+      ...city,
+      medianSalary: grossSalary,
+      netSalary,
+      taxRate,
+      costOfLivingIndex: costIndex,
+      techCityIndex: calculateTechCityIndex(grossSalary, costIndex, nycNetSalary, taxRate),
+    };
+  });
 
   return (
     <main className='min-h-screen bg-gray-50'>
@@ -105,7 +157,7 @@ export default async function Home() {
             </div>
           }
         >
-          <CitiesGrid cities={citiesData} />
+          <CitiesGrid cities={processedCitiesData} />
         </Suspense>
       </div>
     </main>
