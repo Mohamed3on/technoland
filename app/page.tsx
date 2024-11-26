@@ -34,6 +34,8 @@ interface CostOfLivingData {
   };
 }
 
+export const dynamic = 'force-dynamic';
+
 async function getCityData(cityId: string): Promise<SalaryData> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/salary/${cityId}`, {
     next: {
