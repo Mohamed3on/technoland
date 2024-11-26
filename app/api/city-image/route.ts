@@ -13,12 +13,13 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(
-      `${UNSPLASH_API}/search/photos?query=${encodeURIComponent(
-        city
-      )} city skyline&orientation=landscape&per_page=1`,
+      `${UNSPLASH_API}/search/photos?query=${city}&orientation=landscape&per_page=1`,
       {
         headers: {
           Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
+        },
+        next: {
+          revalidate: 30 * 24 * 60 * 60,
         },
       }
     );

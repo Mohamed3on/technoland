@@ -1,13 +1,13 @@
 import { Suspense } from 'react';
 import { cities } from '@/lib/cities';
-import CityCard from '@/app/components/CityCard';
+import CityCard, { CityCardSkeleton } from '@/app/components/CityCard';
 
 // Types
 interface City {
   id: string;
   name: string;
   country: string;
-  imageUrl: string;
+  levelsUrl: string;
   costOfLivingIndex: number;
 }
 
@@ -36,7 +36,9 @@ interface CostOfLivingData {
 
 async function getCityData(cityId: string): Promise<SalaryData> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/salary/${cityId}`, {
-    next: { revalidate: 24 * 60 * 60 },
+    next: {
+      revalidate: 24 * 60 * 60,
+    },
   });
   if (!response.ok) {
     throw new Error(`Failed to fetch salary data for ${cityId}`);
@@ -45,9 +47,7 @@ async function getCityData(cityId: string): Promise<SalaryData> {
 }
 
 async function getTaxRates(): Promise<TaxRates> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/tax-rates`, {
-    next: { revalidate: 0 },
-  });
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/tax-rates`);
   if (!response.ok) {
     throw new Error('Failed to fetch tax rates');
   }
@@ -56,7 +56,9 @@ async function getTaxRates(): Promise<TaxRates> {
 
 async function getCostOfLivingIndices(): Promise<CostOfLivingData> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/cost-of-living`, {
-    next: { revalidate: 24 * 60 * 60 },
+    next: {
+      revalidate: 14 * 24 * 60 * 60,
+    },
   });
   if (!response.ok) {
     throw new Error('Failed to fetch cost of living indices');
@@ -77,19 +79,12 @@ function calculateTechCityIndex(
 }
 
 // Server Components
-function LoadingCard() {
+function LoadingGrid() {
   return (
-    <div className='rounded-xl overflow-hidden shadow-lg bg-white animate-pulse'>
-      <div className='h-48 bg-gray-200' />
-      <div className='p-6 space-y-4'>
-        <div className='h-6 bg-gray-200 rounded w-2/3' />
-        <div className='h-4 bg-gray-200 rounded w-1/3' />
-        <div className='space-y-3'>
-          <div className='h-4 bg-gray-200 rounded' />
-          <div className='h-4 bg-gray-200 rounded' />
-          <div className='h-4 bg-gray-200 rounded' />
-        </div>
-      </div>
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
+      {[...Array(6)].map((_, i) => (
+        <CityCardSkeleton key={i} />
+      ))}
     </div>
   );
 }
@@ -148,15 +143,7 @@ export default async function Home() {
             tech opportunity index.
           </p>
         </div>
-        <Suspense
-          fallback={
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
-              {[...Array(6)].map((_, i) => (
-                <LoadingCard key={i} />
-              ))}
-            </div>
-          }
-        >
+        <Suspense fallback={<LoadingGrid />}>
           <CitiesGrid cities={processedCitiesData} />
         </Suspense>
       </div>

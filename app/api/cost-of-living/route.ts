@@ -11,6 +11,8 @@ interface CostOfLivingData {
   };
 }
 
+export const dynamic = 'force-static';
+
 async function getCostOfLivingData(): Promise<CostOfLivingData> {
   const response = await fetch(NUMBEO_URL, {
     next: {

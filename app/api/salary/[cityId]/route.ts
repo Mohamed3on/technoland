@@ -1,22 +1,31 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { cities } from '@/lib/cities';
 
-export async function GET(request: Request, { params }: { params: { cityId: string } }) {
+const LEVELS_BASE_URL = 'https://www.levels.fyi/t/software-engineer/levels/senior/locations/';
+
+export async function GET(request: Request, { params }: { params: Promise<{ cityId: string }> }) {
   try {
-    const cityData = cities[params.cityId as keyof typeof cities];
+    const cityData = cities[(await params).cityId as keyof typeof cities];
     if (!cityData) {
       return NextResponse.json({ error: 'City not found' }, { status: 404 });
     }
 
-    const response = await axios.get(cityData.levelsUrl);
+    const response = await fetch(LEVELS_BASE_URL + cityData.levelsUrl, {
+      next: {
+        revalidate: 24 * 60 * 60, // Cache for 24 hours
+      },
+    });
 
-    const $ = cheerio.load(response.data);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch from levels.fyi for ${cityData.name}`);
+    }
+
+    const html = await response.text();
+    const $ = cheerio.load(html);
 
     // Extract exchange rate from the response data
-    const responseText = response.data;
-    const match = responseText.match(/"locationExchangeRate":(\d+\.?\d*)/);
+    const match = html.match(/"locationExchangeRate":(\d+\.?\d*)/);
     const exchangeRate = match ? parseFloat(match[1]) : null;
 
     // find "Median Total Comp"

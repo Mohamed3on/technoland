@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 
+export const dynamic = 'force-static';
 const TAX_RATES_URL = 'https://tradingeconomics.com/country-list/personal-income-tax-rate';
 
 async function getAllTaxRates(): Promise<Record<string, number>> {
