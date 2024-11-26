@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 const UNSPLASH_API = 'https://api.unsplash.com';
 
-export const revalidate = 30 * 24 * 60 * 60;
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('query');
