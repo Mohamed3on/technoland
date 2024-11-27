@@ -16,7 +16,7 @@ export const dynamic = 'force-static';
 async function getCostOfLivingData(): Promise<CostOfLivingData> {
   const response = await fetch(NUMBEO_URL, {
     next: {
-      revalidate: 24 * 60 * 60, // Cache for 24 hours
+      revalidate: 7 * 24 * 60 * 60, // Cache for 7 days
     },
   });
 
@@ -41,7 +41,6 @@ function parseCostOfLivingData(html: string): CostOfLivingData {
     const fullLocation = cityCell.text().trim();
     const indexValue = $(row).find('td:last').text().trim();
 
-    // Parse location into city and country
     const locationParts = fullLocation.split(', ');
     if (locationParts.length < 2) {
       console.log('locationParts', locationParts);
@@ -52,17 +51,14 @@ function parseCostOfLivingData(html: string): CostOfLivingData {
     // Handle cases with state/province
     const country = locationParts.length === 3 ? locationParts[2] : locationParts[1];
 
-    // Clean up city name (remove state abbreviation if present)
     city = city.replace(/,.*$/, '').trim();
 
-    // Parse the index value
     const index = parseFloat(indexValue);
     if (isNaN(index)) {
       console.log('indexValue', indexValue);
       return;
     }
 
-    // Create a key that's easier to match (lowercase, no spaces)
     const key = `${city.toLowerCase()}-${country.toLowerCase()}`;
 
     costData[key] = {

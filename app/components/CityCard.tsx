@@ -4,30 +4,22 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { InfoIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Suspense } from 'react';
+import { CityData } from '@/types';
 
-interface CityData {
-  id: string;
-  name: string;
-  country: string;
-  levelsUrl: string;
-  costOfLivingIndex: number;
-  medianSalary: number;
-  netSalary: number;
-  techCityIndex: number;
-  taxRate: number;
-}
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1444723121867-7a241cacace9';
 
 async function getCityImage(cityName: string) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/city-image?city=${cityName}`
-    );
-    if (!response.ok) return null;
-    return response.json();
-  } catch (error) {
-    console.error('Failed to fetch image:', error);
-    return null;
-  }
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/city-image?city=${cityName}`,
+    { next: { revalidate: 60 * 60 * 24 } }
+  );
+  if (!response.ok)
+    return {
+      imageUrl: PLACEHOLDER_IMAGE,
+      photographer: 'Thaddaeus Lim',
+      photographerUrl: 'https://unsplash.com/@thaddaeuslee',
+    };
+  return response.json();
 }
 
 const toTitleCase = (str: string) => {

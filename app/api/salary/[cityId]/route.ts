@@ -24,11 +24,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ city
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    // Extract exchange rate from the response data
     const match = html.match(/"locationExchangeRate":(\d+\.?\d*)/);
     const exchangeRate = match ? parseFloat(match[1]) : null;
 
-    // find "Median Total Comp"
     const medianTotalCompP = $('p:contains("Median Total Comp")').first();
     if (!medianTotalCompP.length) {
       throw new Error('Could not find median total comp');
@@ -47,7 +45,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ city
       throw new Error('Could not parse median salary');
     }
 
-    // Convert to USD if exchange rate is available
     const salaryInUSD = exchangeRate
       ? Math.round(parsedMedianSalary / exchangeRate)
       : parsedMedianSalary;

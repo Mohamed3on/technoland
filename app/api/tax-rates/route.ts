@@ -1,23 +1,35 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
+import { fallbackTaxRates } from '@/lib/fallbackTaxRates';
 
 export const dynamic = 'force-static';
 
 const TAX_RATES_URL = 'https://tradingeconomics.com/country-list/personal-income-tax-rate';
 
 async function getAllTaxRates(): Promise<Record<string, number>> {
-  const response = await fetch(TAX_RATES_URL, {
-    next: {
-      revalidate: 30 * 24 * 60 * 60,
-    },
-  });
+  try {
+    const response = await fetch(TAX_RATES_URL, {
+      next: {
+        revalidate: 30 * 24 * 60 * 60,
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch tax rates');
+    if (!response.ok) {
+      throw new Error('Failed to fetch tax rates');
+    }
+
+    const html = await response.text();
+    const parsedRates = parseTaxRates(html);
+
+    if (Object.keys(parsedRates).length === 0) {
+      throw new Error('No tax rates parsed from response');
+    }
+
+    return parsedRates;
+  } catch (error) {
+    console.warn('Failed to fetch or parse tax rates, using fallback data:', error);
+    return fallbackTaxRates;
   }
-
-  const html = await response.text();
-  return parseTaxRates(html);
 }
 
 function parseTaxRates(html: string): Record<string, number> {
@@ -43,6 +55,6 @@ export async function GET() {
     return NextResponse.json(rates);
   } catch (error) {
     console.error('Failed to fetch tax rates:', error);
-    return NextResponse.json({ error: 'Failed to fetch tax rates' }, { status: 500 });
+    return NextResponse.json(fallbackTaxRates);
   }
 }

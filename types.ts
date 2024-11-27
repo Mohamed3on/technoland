@@ -4,12 +4,14 @@ export interface City {
   country: string;
   costOfLivingIndex: number;
   levelsUrl: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 export interface CityData extends City {
   medianSalary: number;
   techCityIndex: number;
+  taxRate: number;
+  netSalary: number;
 }
 
 export interface CityCardProps {

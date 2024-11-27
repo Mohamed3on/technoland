@@ -7,7 +7,9 @@ export interface City {
   imageUrl: string;
 }
 
-export interface CityData extends City {
+interface CityData extends City {
   medianSalary: number;
+  netSalary: number;
+  taxRate: number;
   techCityIndex: number;
 }
