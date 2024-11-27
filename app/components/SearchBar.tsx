@@ -50,33 +50,35 @@ export default function SearchBar() {
   };
 
   return (
-    <div className='relative flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-3xl mx-auto mb-8 px-4 sm:px-0'>
-      {isPending && (
-        <div className='absolute -top-6 right-4 sm:right-0'>
-          <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
+    <div className='space-y-4 mb-8'>
+      <div className='relative flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-3xl mx-auto px-4 sm:px-0'>
+        {isPending && (
+          <div className='absolute -top-6 right-4 sm:right-0'>
+            <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
+          </div>
+        )}
+        <div className='relative flex-1'>
+          <label className='text-sm text-muted-foreground block mb-2'>Search</label>
+          <Input
+            placeholder='Search cities or countries...'
+            className={`w-full ${isPending ? 'opacity-70' : ''}`}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
         </div>
-      )}
-      <div className='relative flex-1'>
-        <label className='text-sm text-muted-foreground block mb-2'>Search</label>
-        <Input
-          placeholder='Search cities or countries...'
-          className={`w-full ${isPending ? 'opacity-70' : ''}`}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-      </div>
-      <div>
-        <label className='text-sm text-muted-foreground block mb-2'>
-          Rank cities by <span className='text-xs opacity-70'>(before vs. after taxes)</span>
-        </label>
-        <Select defaultValue={searchParams.get('sort') ?? 'net'} onValueChange={handleSort}>
-          <SelectTrigger className={`w-full sm:w-[180px] ${isPending ? 'opacity-70' : ''}`}>
-            <SelectValue placeholder='Sort by' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='net'>Net Income</SelectItem>
-            <SelectItem value='gross'>Gross Income</SelectItem>
-          </SelectContent>
-        </Select>
+        <div>
+          <label className='text-sm text-muted-foreground block mb-2'>
+            Rank cities by <span className='text-xs opacity-70'>(before vs. after taxes)</span>
+          </label>
+          <Select defaultValue={searchParams.get('sort') ?? 'net'} onValueChange={handleSort}>
+            <SelectTrigger className={`w-full sm:w-[180px] ${isPending ? 'opacity-70' : ''}`}>
+              <SelectValue placeholder='Sort by' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='net'>Net Income</SelectItem>
+              <SelectItem value='gross'>Gross Income</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );

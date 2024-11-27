@@ -5,6 +5,7 @@ export interface City {
   costOfLivingIndex: number;
   levelsUrl: string;
   imageUrl?: string;
+  region: string;
 }
 
 export interface CityData extends City {

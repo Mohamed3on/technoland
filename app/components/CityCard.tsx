@@ -6,6 +6,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Suspense } from 'react';
 import { CityData } from '@/types';
 
+import { Badge } from '@/components/ui/badge';
+
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1444723121867-7a241cacace9';
 
 async function getCityImage(cityName: string) {
@@ -226,6 +228,9 @@ export default async function CityCard({ city, rank }: { city: CityData; rank: n
               >
                 {city.techCityIndex.toFixed(1)}
               </span>
+            </div>
+            <div className='mt-4'>
+              <Badge className='bg-gray-100 text-gray-600 hover:bg-gray-200'>{city.region}</Badge>
             </div>
           </div>
         </CardContent>

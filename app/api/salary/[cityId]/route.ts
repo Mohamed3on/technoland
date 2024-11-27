@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ city
 
     const response = await fetch(LEVELS_BASE_URL + cityData.levelsUrl, {
       next: {
-        revalidate: 24 * 60 * 60, // Cache for 24 hours
+        revalidate: 7 * 24 * 60 * 60, // Cache for 7 days
       },
     });
 
