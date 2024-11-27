@@ -8,12 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useTransition } from 'react';
 
 export default function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -24,45 +26,58 @@ export default function SearchBar() {
     [searchParams]
   );
 
-  const handleSearch = (term: string) => {
-    if (term === '') {
-      const params = new URLSearchParams(searchParams);
-      params.delete('search');
-      router.replace(`/?${params.toString()}`);
-    } else {
-      router.replace(`/?${createQueryString('search', term)}`);
-    }
+  const handleSearch = (value: string) => {
+    startTransition(() => {
+      if (value === '') {
+        const params = new URLSearchParams(searchParams);
+        params.delete('search');
+        router.replace(`/?${params.toString()}`);
+      } else {
+        router.replace(`/?${createQueryString('search', value)}`);
+      }
+    });
   };
 
   const handleSort = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('sort', value);
-    if (searchParams.get('search')) {
-      params.set('search', searchParams.get('search')!);
-    }
-    router.replace(`/?${params.toString()}`);
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams);
+      params.set('sort', value);
+      if (searchParams.get('search')) {
+        params.set('search', searchParams.get('search')!);
+      }
+      router.replace(`/?${params.toString()}`);
+    });
   };
 
   return (
-    <div className='flex gap-4 max-w-3xl mx-auto mb-8'>
-      <Input
-        placeholder='Search cities or countries...'
-        className='flex-1'
-        defaultValue={searchParams.get('search') ?? ''}
-        onChange={(e) => {
-          const value = e.target.value;
-          handleSearch(value);
-        }}
-      />
-      <Select defaultValue={searchParams.get('sort') ?? 'gross'} onValueChange={handleSort}>
-        <SelectTrigger className='w-[180px]'>
-          <SelectValue placeholder='Sort by' />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value='gross'>Gross Income</SelectItem>
-          <SelectItem value='net'>Net Income</SelectItem>
-        </SelectContent>
-      </Select>
+    <div className='relative flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-3xl mx-auto mb-8 px-4 sm:px-0'>
+      {isPending && (
+        <div className='absolute -top-6 right-4 sm:right-0'>
+          <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
+        </div>
+      )}
+      <div className='relative flex-1'>
+        <label className='text-sm text-muted-foreground block mb-2'>Search</label>
+        <Input
+          placeholder='Search cities or countries...'
+          className={`w-full ${isPending ? 'opacity-70' : ''}`}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className='text-sm text-muted-foreground block mb-2'>
+          Rank cities by <span className='text-xs opacity-70'>(before vs. after taxes)</span>
+        </label>
+        <Select defaultValue={searchParams.get('sort') ?? 'net'} onValueChange={handleSort}>
+          <SelectTrigger className={`w-full sm:w-[180px] ${isPending ? 'opacity-70' : ''}`}>
+            <SelectValue placeholder='Sort by' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value='net'>Net Income</SelectItem>
+            <SelectItem value='gross'>Gross Income</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }
