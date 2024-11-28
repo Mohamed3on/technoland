@@ -15,11 +15,11 @@ export function calculateTechCityIndex(
   taxRate: number,
   useNetIncome: boolean = true
 ): number {
-  const baseIncome = useNetIncome ? grossSalary * (1 - taxRate / 100) : grossSalary;
-  const nycBaseIncome = useNetIncome ? nycGrossSalary * (1 - nycTaxRate / 100) : nycGrossSalary;
-  const cityPurchasingPower = baseIncome / (costIndex / 100);
-  const nycPurchasingPower = nycBaseIncome / (100 / 100);
-  return (cityPurchasingPower / nycPurchasingPower) * 100;
+  const cityNetIncome = useNetIncome ? grossSalary * (1 - taxRate / 100) : grossSalary;
+  const nycNetIncome = useNetIncome ? nycGrossSalary * (1 - nycTaxRate / 100) : nycGrossSalary;
+  const salaryRatio = cityNetIncome / nycNetIncome;
+  const costRatio = costIndex / 100;
+  return (salaryRatio / costRatio) * 100;
 }
 
 export async function processCityData(
