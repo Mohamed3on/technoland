@@ -53,7 +53,8 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
     if (!searchTerm) return true;
     return (
       city.name.toLowerCase().includes(searchTerm) ||
-      city.country.toLowerCase().includes(searchTerm)
+      city.country.toLowerCase().includes(searchTerm) ||
+      city.region.toLowerCase().includes(searchTerm)
     );
   });
 

@@ -60,7 +60,7 @@ export default function SearchBar() {
         <div className='relative flex-1'>
           <label className='text-sm text-muted-foreground block mb-2'>Search</label>
           <Input
-            placeholder='Search cities or countries...'
+            placeholder='Search cities, countries or regions...'
             className={`w-full ${isPending ? 'opacity-70' : ''}`}
             onChange={(e) => handleSearch(e.target.value)}
           />
