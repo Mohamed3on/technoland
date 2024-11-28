@@ -472,7 +472,7 @@ export const cities: Record<string, City> = {
     id: 'denver',
     name: 'Denver',
     country: 'United States',
-    levelsUrl: 'madrid-metropolitan-area',
+    levelsUrl: 'greater-denver-and-boulder-area',
     costOfLivingIndex: 100,
     region: REGIONS.NORTH_AMERICA,
   },
