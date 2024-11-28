@@ -115,7 +115,7 @@ export default async function CityCard({ city, rank }: { city: CityData; rank: n
                 <Tip
                   content={
                     <p className='max-w-xs'>
-                      Median total yearly compensation for senior software engineers (from{' '}
+                      Median total yearly compensation for software engineers (from{' '}
                       <a href='https://levels.fyi' target='_blank' rel='noopener noreferrer'>
                         levels.fyi
                       </a>
