@@ -8,16 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function calculateTechCityIndex(
-  grossSalary: number,
+  salary: number,
   costIndex: number,
-  nycGrossSalary: number,
-  nycTaxRate: number,
-  taxRate: number,
-  useNetIncome: boolean = true
+  nycSalary: number
 ): number {
-  const cityNetIncome = useNetIncome ? grossSalary * (1 - taxRate / 100) : grossSalary;
-  const nycNetIncome = useNetIncome ? nycGrossSalary * (1 - nycTaxRate / 100) : nycGrossSalary;
-  const salaryRatio = cityNetIncome / nycNetIncome;
+  const salaryRatio = salary / nycSalary;
   const costRatio = costIndex / 100;
   return (salaryRatio / costRatio) * 100;
 }
@@ -28,27 +23,27 @@ export async function processCityData(
   nycSalary: number,
   taxRates: Record<string, number>,
   costOfLivingData: Record<string, { index: number }>,
-  nycTaxRate: number,
-  useNetIncome: boolean
+  useGrossIncome: boolean
 ): Promise<CityData> {
   const taxRate = taxRates[city.country.toLowerCase()] || 0;
   const grossSalary = salaryData.medianSalary;
+  const netSalary = grossSalary * (1 - taxRate / 100);
+
   const costLookupKey = `${city.name.toLowerCase()}-${city.country.toLowerCase()}`;
   const costIndex = costOfLivingData[costLookupKey]?.index || city.costOfLivingIndex;
+
+  const nycTaxRate = taxRates['united states'] || 0;
+  const nycNetSalary = nycSalary * (1 - nycTaxRate / 100);
+
+  const salaryForIndex = useGrossIncome ? grossSalary : netSalary;
+  const nycSalaryForIndex = useGrossIncome ? nycSalary : nycNetSalary;
 
   return {
     ...city,
     medianSalary: grossSalary,
-    netSalary: grossSalary * (1 - taxRate / 100),
+    netSalary,
     taxRate,
     costOfLivingIndex: costIndex,
-    techCityIndex: calculateTechCityIndex(
-      grossSalary,
-      costIndex,
-      nycSalary,
-      nycTaxRate,
-      taxRate,
-      useNetIncome
-    ),
+    techCityIndex: calculateTechCityIndex(salaryForIndex, costIndex, nycSalaryForIndex),
   };
 }

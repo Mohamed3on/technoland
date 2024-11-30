@@ -71,8 +71,7 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
         nycSalaryData.medianSalary,
         taxRates,
         costOfLivingData,
-        taxRates['united states'] || 0,
-        searchParams?.sort === 'net'
+        searchParams?.sort === 'gross'
       )
     )
   );

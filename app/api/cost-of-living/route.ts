@@ -55,7 +55,6 @@ function parseCostOfLivingData(html: string): CostOfLivingData {
 
     const index = parseFloat(indexValue);
     if (isNaN(index)) {
-      console.log('indexValue', indexValue);
       return;
     }
 

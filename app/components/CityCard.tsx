@@ -146,7 +146,7 @@ export default async function CityCard({ city, rank }: { city: CityData; rank: n
             <div className='flex justify-between items-center'>
               <span className='text-gray-600'>Median Net Income</span>
               <span className='font-semibold'>
-                ${new Intl.NumberFormat().format(city.netSalary)}
+                ${new Intl.NumberFormat().format(Math.round(city.netSalary))}
               </span>
             </div>
             <div className='flex justify-between items-center'>
