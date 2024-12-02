@@ -22,8 +22,7 @@ export async function processCityData(
   salaryData: { medianSalary: number },
   nycSalary: number,
   taxRates: Record<string, number>,
-  costOfLivingData: Record<string, { index: number }>,
-  useGrossIncome: boolean
+  costOfLivingData: Record<string, { index: number }>
 ): Promise<CityData> {
   const taxRate = taxRates[city.country.toLowerCase()] || 0;
   const grossSalary = salaryData.medianSalary;
@@ -35,15 +34,12 @@ export async function processCityData(
   const nycTaxRate = taxRates['united states'] || 0;
   const nycNetSalary = nycSalary * (1 - nycTaxRate / 100);
 
-  const salaryForIndex = useGrossIncome ? grossSalary : netSalary;
-  const nycSalaryForIndex = useGrossIncome ? nycSalary : nycNetSalary;
-
   return {
     ...city,
     medianSalary: grossSalary,
     netSalary,
     taxRate,
     costOfLivingIndex: costIndex,
-    techCityIndex: calculateTechCityIndex(salaryForIndex, costIndex, nycSalaryForIndex),
+    techCityIndex: calculateTechCityIndex(netSalary, costIndex, nycNetSalary),
   };
 }

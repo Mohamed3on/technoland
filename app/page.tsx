@@ -7,7 +7,6 @@ import { processCityData } from '@/lib/utils';
 interface PageProps {
   searchParams: {
     search?: string;
-    sort?: 'gross' | 'net';
   };
 }
 
@@ -70,8 +69,7 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
         citiesSalaryData[index],
         nycSalaryData.medianSalary,
         taxRates,
-        costOfLivingData,
-        searchParams?.sort === 'gross'
+        costOfLivingData
       )
     )
   );
