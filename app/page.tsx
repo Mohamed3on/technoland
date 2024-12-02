@@ -46,6 +46,7 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
       },
     }).then((r) => r.json()),
   ]);
+  console.log('🚀 ~ CitiesGrid ~ costOfLivingData:', costOfLivingData);
 
   const filteredCities = Object.values(cities).filter((city) => {
     const searchTerm = searchParams?.search?.toLowerCase().trim();

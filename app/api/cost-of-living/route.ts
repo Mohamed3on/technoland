@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
+import { fallbackCostOfLiving } from '@/lib/fallbackCostOfLiving';
+import type { CostOfLivingData } from '@/lib/fallbackCostOfLiving';
 
 const NUMBEO_URL = 'https://www.numbeo.com/cost-of-living/rankings_current.jsp?displayColumn=2';
-
-interface CostOfLivingData {
-  [key: string]: {
-    city: string;
-    country: string;
-    index: number;
-  };
-}
 
 export const dynamic = 'force-static';
 
@@ -76,6 +70,6 @@ export async function GET() {
     return NextResponse.json(costOfLivingData);
   } catch (error) {
     console.error('Failed to fetch cost of living data:', error);
-    return NextResponse.json({ error: 'Failed to fetch cost of living data' }, { status: 500 });
+    return NextResponse.json(fallbackCostOfLiving);
   }
 }
