@@ -1,5 +1,4 @@
-import { City } from '@/lib/cities';
-import { CityData } from '@/types';
+import { City, CityData } from '@/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -29,7 +28,7 @@ export async function processCityData(
   const netSalary = grossSalary * (1 - taxRate / 100);
 
   const costLookupKey = `${city.name.toLowerCase()}-${city.country.toLowerCase()}`;
-  const costIndex = costOfLivingData[costLookupKey]?.index || city.costOfLivingIndex;
+  const costIndex = costOfLivingData[costLookupKey]?.index;
 
   const nycTaxRate = taxRates['united states'] || 0;
   const nycNetSalary = nycSalary * (1 - nycTaxRate / 100);

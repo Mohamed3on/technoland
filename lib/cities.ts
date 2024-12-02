@@ -1,3 +1,5 @@
+import { City } from '@/types';
+
 type RegionType = (typeof REGIONS)[keyof typeof REGIONS];
 
 export const REGIONS = {
@@ -10,22 +12,13 @@ export const REGIONS = {
   AFRICA: 'Africa',
 } as const;
 
-export interface City {
-  id: string;
-  name: string;
-  country: string;
-  levelsUrl: string;
-  costOfLivingIndex: number;
-  region: RegionType;
-}
-
 export const cities: Record<string, City> = {
   'new-york': {
     id: 'new-york',
     name: 'New York',
     country: 'United States',
     levelsUrl: 'new-york-usa',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   sf: {
@@ -33,7 +26,7 @@ export const cities: Record<string, City> = {
     name: 'San Francisco',
     country: 'United States',
     levelsUrl: 'san-francisco-bay-area',
-    costOfLivingIndex: 85.3,
+
     region: REGIONS.NORTH_AMERICA,
   },
   london: {
@@ -41,7 +34,7 @@ export const cities: Record<string, City> = {
     name: 'London',
     country: 'United Kingdom',
     levelsUrl: 'london-metro-area',
-    costOfLivingIndex: 73,
+
     region: REGIONS.EUROPE,
   },
   dubai: {
@@ -49,7 +42,7 @@ export const cities: Record<string, City> = {
     name: 'Dubai',
     country: 'United Arab Emirates',
     levelsUrl: 'greater-dubai-area',
-    costOfLivingIndex: 55.1,
+
     region: REGIONS.MIDDLE_EAST,
   },
   berlin: {
@@ -57,7 +50,7 @@ export const cities: Record<string, City> = {
     name: 'Berlin',
     country: 'Germany',
     levelsUrl: 'berlin-metropolitan-region',
-    costOfLivingIndex: 47.6,
+
     region: REGIONS.EUROPE,
   },
   barcelona: {
@@ -65,7 +58,7 @@ export const cities: Record<string, City> = {
     name: 'Barcelona',
     country: 'Spain',
     levelsUrl: 'greater-barcelona-area',
-    costOfLivingIndex: 41.9,
+
     region: REGIONS.EUROPE,
   },
   zurich: {
@@ -73,7 +66,7 @@ export const cities: Record<string, City> = {
     name: 'Zurich',
     country: 'Switzerland',
     levelsUrl: 'greater-zurich-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   seattle: {
@@ -81,7 +74,7 @@ export const cities: Record<string, City> = {
     name: 'Seattle',
     country: 'United States',
     levelsUrl: 'greater-seattle-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   'san-diego': {
@@ -89,7 +82,7 @@ export const cities: Record<string, City> = {
     name: 'San Diego',
     country: 'United States',
     levelsUrl: 'greater-san-diego-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   amsterdam: {
@@ -97,7 +90,7 @@ export const cities: Record<string, City> = {
     name: 'Amsterdam',
     country: 'Netherlands',
     levelsUrl: 'greater-amsterdam-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   portland: {
@@ -105,7 +98,7 @@ export const cities: Record<string, City> = {
     name: 'Portland',
     country: 'United States',
     levelsUrl: 'greater-portland-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   'tel-aviv': {
@@ -113,7 +106,7 @@ export const cities: Record<string, City> = {
     name: 'Tel Aviv-Yafo',
     country: 'Israel',
     levelsUrl: 'tel-aviv-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   vancouver: {
@@ -121,7 +114,7 @@ export const cities: Record<string, City> = {
     name: 'Vancouver',
     country: 'Canada',
     levelsUrl: 'greater-vancouver',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   sydney: {
@@ -129,7 +122,7 @@ export const cities: Record<string, City> = {
     name: 'Sydney',
     country: 'Australia',
     levelsUrl: 'greater-sydney',
-    costOfLivingIndex: 100,
+
     region: REGIONS.OCEANIA,
   },
   'abu-dhabi': {
@@ -137,7 +130,7 @@ export const cities: Record<string, City> = {
     name: 'Abu Dhabi',
     country: 'United Arab Emirates',
     levelsUrl: 'united-arab-emirates',
-    costOfLivingIndex: 100,
+
     region: REGIONS.MIDDLE_EAST,
   },
   singapore: {
@@ -145,7 +138,7 @@ export const cities: Record<string, City> = {
     name: 'Singapore',
     country: 'Singapore',
     levelsUrl: 'singapore',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   dublin: {
@@ -153,7 +146,7 @@ export const cities: Record<string, City> = {
     name: 'Dublin',
     country: 'Ireland',
     levelsUrl: 'greater-dublin-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   luxembourg: {
@@ -161,7 +154,7 @@ export const cities: Record<string, City> = {
     name: 'Luxembourg',
     country: 'Luxembourg',
     levelsUrl: 'luxembourg',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   copenhagen: {
@@ -169,7 +162,7 @@ export const cities: Record<string, City> = {
     name: 'Copenhagen',
     country: 'Denmark',
     levelsUrl: 'denmark',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   cambridge: {
@@ -177,7 +170,7 @@ export const cities: Record<string, City> = {
     name: 'Cambridge',
     country: 'United Kingdom',
     levelsUrl: 'greater-cambridge-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   geneva: {
@@ -185,7 +178,7 @@ export const cities: Record<string, City> = {
     name: 'Geneva',
     country: 'Switzerland',
     levelsUrl: 'switzerland',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   'los-angeles': {
@@ -193,7 +186,7 @@ export const cities: Record<string, City> = {
     name: 'Los Angeles',
     country: 'United States',
     levelsUrl: 'greater-los-angeles-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   austin: {
@@ -201,7 +194,7 @@ export const cities: Record<string, City> = {
     name: 'Austin',
     country: 'United States',
     levelsUrl: 'greater-austin-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   boston: {
@@ -209,7 +202,7 @@ export const cities: Record<string, City> = {
     name: 'Boston',
     country: 'United States',
     levelsUrl: 'greater-boston-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   toronto: {
@@ -217,7 +210,7 @@ export const cities: Record<string, City> = {
     name: 'Toronto',
     country: 'Canada',
     levelsUrl: 'greater-toronto-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   lisbon: {
@@ -225,7 +218,7 @@ export const cities: Record<string, City> = {
     name: 'Lisbon',
     country: 'Portugal',
     levelsUrl: 'lisbon-metro-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   chicago: {
@@ -233,7 +226,7 @@ export const cities: Record<string, City> = {
     name: 'Chicago',
     country: 'United States',
     levelsUrl: 'greater-chicago-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   paris: {
@@ -241,7 +234,7 @@ export const cities: Record<string, City> = {
     name: 'Paris',
     country: 'France',
     levelsUrl: 'greater-paris-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   miami: {
@@ -249,7 +242,7 @@ export const cities: Record<string, City> = {
     name: 'Miami',
     country: 'United States',
     levelsUrl: 'miami-ft-lauderdale-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   bengaluru: {
@@ -257,7 +250,7 @@ export const cities: Record<string, City> = {
     name: 'Bangalore',
     country: 'India',
     levelsUrl: 'greater-bengaluru',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   atlanta: {
@@ -265,7 +258,7 @@ export const cities: Record<string, City> = {
     name: 'Atlanta',
     country: 'United States',
     levelsUrl: 'atlanta-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   philadelphia: {
@@ -273,7 +266,7 @@ export const cities: Record<string, City> = {
     name: 'Philadelphia',
     country: 'United States',
     levelsUrl: 'philadelphia-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   stockholm: {
@@ -281,7 +274,7 @@ export const cities: Record<string, City> = {
     name: 'Stockholm',
     country: 'Sweden',
     levelsUrl: 'greater-stockholm',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   nashville: {
@@ -289,7 +282,7 @@ export const cities: Record<string, City> = {
     name: 'Nashville',
     country: 'United States',
     levelsUrl: 'nashville-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   montreal: {
@@ -297,7 +290,7 @@ export const cities: Record<string, City> = {
     name: 'Montreal',
     country: 'Canada',
     levelsUrl: 'greater-montreal',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   vienna: {
@@ -305,7 +298,7 @@ export const cities: Record<string, City> = {
     name: 'Vienna',
     country: 'Austria',
     levelsUrl: 'vienna-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   'salt-lake-city': {
@@ -313,7 +306,7 @@ export const cities: Record<string, City> = {
     name: 'Salt Lake City',
     country: 'United States',
     levelsUrl: 'salt-lake-city-greater-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   melbourne: {
@@ -321,7 +314,7 @@ export const cities: Record<string, City> = {
     name: 'Melbourne',
     country: 'Australia',
     levelsUrl: 'greater-melbourne-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.OCEANIA,
   },
   dallas: {
@@ -329,7 +322,7 @@ export const cities: Record<string, City> = {
     name: 'Dallas',
     country: 'United States',
     levelsUrl: 'greater-dallas-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   helsinki: {
@@ -337,7 +330,7 @@ export const cities: Record<string, City> = {
     name: 'Helsinki',
     country: 'Finland',
     levelsUrl: 'greater-helsinki',
-    costOfLivingIndex: 46.9,
+
     region: REGIONS.EUROPE,
   },
   'st-louis': {
@@ -345,7 +338,7 @@ export const cities: Record<string, City> = {
     name: 'St. Louis',
     country: 'United States',
     levelsUrl: 'st-louis-area',
-    costOfLivingIndex: 48.9,
+
     region: REGIONS.NORTH_AMERICA,
   },
   houston: {
@@ -353,7 +346,7 @@ export const cities: Record<string, City> = {
     name: 'Houston',
     country: 'United States',
     levelsUrl: 'greater-houston-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   oslo: {
@@ -361,7 +354,7 @@ export const cities: Record<string, City> = {
     name: 'Oslo',
     country: 'Norway',
     levelsUrl: 'greater-oslo-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   munich: {
@@ -369,7 +362,7 @@ export const cities: Record<string, City> = {
     name: 'Munich',
     country: 'Germany',
     levelsUrl: 'munich-metro-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   calgary: {
@@ -377,7 +370,7 @@ export const cities: Record<string, City> = {
     name: 'Calgary',
     country: 'Canada',
     levelsUrl: 'greater-calgary-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   orlando: {
@@ -385,7 +378,7 @@ export const cities: Record<string, City> = {
     name: 'Orlando',
     country: 'United States',
     levelsUrl: 'orlando-daytona-bch-melbrn-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   riyadh: {
@@ -393,7 +386,7 @@ export const cities: Record<string, City> = {
     name: 'Riyadh',
     country: 'Saudi Arabia',
     levelsUrl: 'saudi-arabia',
-    costOfLivingIndex: 100,
+
     region: REGIONS.MIDDLE_EAST,
   },
   minneapolis: {
@@ -401,7 +394,7 @@ export const cities: Record<string, City> = {
     name: 'Minneapolis',
     country: 'United States',
     levelsUrl: 'minneapolis-st-paul-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   cairo: {
@@ -409,7 +402,7 @@ export const cities: Record<string, City> = {
     name: 'Cairo',
     country: 'Egypt',
     levelsUrl: 'greater-cairo',
-    costOfLivingIndex: 100,
+
     region: REGIONS.AFRICA,
   },
   edinburgh: {
@@ -417,7 +410,7 @@ export const cities: Record<string, City> = {
     name: 'Edinburgh',
     country: 'United Kingdom',
     levelsUrl: 'edinburgh-metro-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   ottawa: {
@@ -425,7 +418,7 @@ export const cities: Record<string, City> = {
     name: 'Ottawa',
     country: 'Canada',
     levelsUrl: 'greater-ottawa-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   auckland: {
@@ -433,7 +426,7 @@ export const cities: Record<string, City> = {
     name: 'Auckland',
     country: 'New Zealand',
     levelsUrl: 'auckland-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.OCEANIA,
   },
   manchester: {
@@ -441,7 +434,7 @@ export const cities: Record<string, City> = {
     name: 'Manchester',
     country: 'United Kingdom',
     levelsUrl: 'greater-manchester',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   baltimore: {
@@ -449,7 +442,7 @@ export const cities: Record<string, City> = {
     name: 'Baltimore',
     country: 'United States',
     levelsUrl: 'baltimore-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   brisbane: {
@@ -457,7 +450,7 @@ export const cities: Record<string, City> = {
     name: 'Brisbane',
     country: 'Australia',
     levelsUrl: 'south-east-queensland-metro-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.OCEANIA,
   },
   madrid: {
@@ -465,7 +458,7 @@ export const cities: Record<string, City> = {
     name: 'Madrid',
     country: 'Spain',
     levelsUrl: 'madrid-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   denver: {
@@ -473,7 +466,7 @@ export const cities: Record<string, City> = {
     name: 'Denver',
     country: 'United States',
     levelsUrl: 'greater-denver-and-boulder-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   raleigh: {
@@ -481,7 +474,7 @@ export const cities: Record<string, City> = {
     name: 'Raleigh',
     country: 'United States',
     levelsUrl: 'raleigh-durham-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   tampa: {
@@ -489,7 +482,7 @@ export const cities: Record<string, City> = {
     name: 'Tampa',
     country: 'United States',
     levelsUrl: 'tampa-st-pete-sarasota-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   milan: {
@@ -497,7 +490,7 @@ export const cities: Record<string, City> = {
     name: 'Milan',
     country: 'Italy',
     levelsUrl: 'italy',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   athens: {
@@ -505,7 +498,7 @@ export const cities: Record<string, City> = {
     name: 'Athens',
     country: 'Greece',
     levelsUrl: 'greece',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   hamburg: {
@@ -513,7 +506,7 @@ export const cities: Record<string, City> = {
     name: 'Hamburg',
     country: 'Germany',
     levelsUrl: 'hamburg-metro-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   bristol: {
@@ -521,7 +514,7 @@ export const cities: Record<string, City> = {
     name: 'Bristol',
     country: 'United Kingdom',
     levelsUrl: 'greater-bristol',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   'las-vegas': {
@@ -529,7 +522,7 @@ export const cities: Record<string, City> = {
     name: 'Las Vegas',
     country: 'United States',
     levelsUrl: 'las-vegas-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   mumbai: {
@@ -537,7 +530,7 @@ export const cities: Record<string, City> = {
     name: 'Mumbai',
     country: 'India',
     levelsUrl: 'mumbai-metropolitan-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   charlotte: {
@@ -545,7 +538,7 @@ export const cities: Record<string, City> = {
     name: 'Charlotte',
     country: 'United States',
     levelsUrl: 'charlotte-nc-greater-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   bangkok: {
@@ -553,7 +546,7 @@ export const cities: Record<string, City> = {
     name: 'Bangkok',
     country: 'Thailand',
     levelsUrl: 'bangkok-metro-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   'buenos-aires': {
@@ -561,7 +554,7 @@ export const cities: Record<string, City> = {
     name: 'Buenos Aires',
     country: 'Argentina',
     levelsUrl: 'greater-buenos-aires-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.SOUTH_AMERICA,
   },
   'mexico-city': {
@@ -569,7 +562,7 @@ export const cities: Record<string, City> = {
     name: 'Mexico City',
     country: 'Mexico',
     levelsUrl: 'mexico',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   tokyo: {
@@ -577,7 +570,7 @@ export const cities: Record<string, City> = {
     name: 'Tokyo',
     country: 'Japan',
     levelsUrl: 'greater-tokyo-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   'kuala-lumpur': {
@@ -585,7 +578,7 @@ export const cities: Record<string, City> = {
     name: 'Kuala Lumpur',
     country: 'Malaysia',
     levelsUrl: 'greater-kuala-lumpur',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   medellin: {
@@ -593,7 +586,7 @@ export const cities: Record<string, City> = {
     name: 'Medellin',
     country: 'Colombia',
     levelsUrl: 'colombia',
-    costOfLivingIndex: 100,
+
     region: REGIONS.SOUTH_AMERICA,
   },
   istanbul: {
@@ -601,7 +594,7 @@ export const cities: Record<string, City> = {
     name: 'Istanbul',
     country: 'Turkey',
     levelsUrl: 'istanbul-metropolitan-municipality',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   porto: {
@@ -609,7 +602,7 @@ export const cities: Record<string, City> = {
     name: 'Porto',
     country: 'Portugal',
     levelsUrl: 'porto-district',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   'cape-town': {
@@ -617,7 +610,7 @@ export const cities: Record<string, City> = {
     name: 'Cape Town',
     country: 'South Africa',
     levelsUrl: 'greater-cape-town-region',
-    costOfLivingIndex: 100,
+
     region: REGIONS.AFRICA,
   },
   seoul: {
@@ -625,7 +618,7 @@ export const cities: Record<string, City> = {
     name: 'Seoul',
     country: 'South Korea',
     levelsUrl: 'seoul-capital-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   santiago: {
@@ -633,7 +626,7 @@ export const cities: Record<string, City> = {
     name: 'Santiago',
     country: 'Chile',
     levelsUrl: 'chile',
-    costOfLivingIndex: 100,
+
     region: REGIONS.SOUTH_AMERICA,
   },
   belgrade: {
@@ -641,7 +634,7 @@ export const cities: Record<string, City> = {
     name: 'Belgrade',
     country: 'Serbia',
     levelsUrl: 'serbia',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   warsaw: {
@@ -649,7 +642,7 @@ export const cities: Record<string, City> = {
     name: 'Warsaw',
     country: 'Poland',
     levelsUrl: 'warsaw-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   prague: {
@@ -657,7 +650,7 @@ export const cities: Record<string, City> = {
     name: 'Prague',
     country: 'Czech Republic',
     levelsUrl: 'prague-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   moscow: {
@@ -665,7 +658,7 @@ export const cities: Record<string, City> = {
     name: 'Moscow',
     country: 'Russia',
     levelsUrl: 'moscow-metro-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   shanghai: {
@@ -673,7 +666,7 @@ export const cities: Record<string, City> = {
     name: 'Shanghai',
     country: 'China',
     levelsUrl: 'greater-shanghai-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   beijing: {
@@ -681,7 +674,7 @@ export const cities: Record<string, City> = {
     name: 'Beijing',
     country: 'China',
     levelsUrl: 'beijing-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   'sao-paulo': {
@@ -689,7 +682,7 @@ export const cities: Record<string, City> = {
     name: 'Sao Paulo',
     country: 'Brazil',
     levelsUrl: 'greater-sao-paulo',
-    costOfLivingIndex: 100,
+
     region: REGIONS.SOUTH_AMERICA,
   },
   taipei: {
@@ -697,7 +690,7 @@ export const cities: Record<string, City> = {
     name: 'Taipei',
     country: 'Taiwan',
     levelsUrl: 'greater-taipei-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.ASIA,
   },
   bogota: {
@@ -705,7 +698,7 @@ export const cities: Record<string, City> = {
     name: 'Bogota',
     country: 'Colombia',
     levelsUrl: 'colombia',
-    costOfLivingIndex: 100,
+
     region: REGIONS.SOUTH_AMERICA,
   },
   'rio-de-janeiro': {
@@ -713,7 +706,7 @@ export const cities: Record<string, City> = {
     name: 'Rio de Janeiro',
     country: 'Brazil',
     levelsUrl: 'greater-rio-de-janeiro-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.SOUTH_AMERICA,
   },
   sofia: {
@@ -721,7 +714,7 @@ export const cities: Record<string, City> = {
     name: 'Sofia',
     country: 'Bulgaria',
     levelsUrl: 'sofia-city-province',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   budapest: {
@@ -729,7 +722,7 @@ export const cities: Record<string, City> = {
     name: 'Budapest',
     country: 'Hungary',
     levelsUrl: 'budapest-metropolitan-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.EUROPE,
   },
   phoenix: {
@@ -737,7 +730,7 @@ export const cities: Record<string, City> = {
     name: 'Phoenix',
     country: 'United States',
     levelsUrl: 'phoenix-area',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
   'washington-dc': {
@@ -745,7 +738,7 @@ export const cities: Record<string, City> = {
     name: 'Washington',
     country: 'United States',
     levelsUrl: 'northern-virginia-washington-dc',
-    costOfLivingIndex: 100,
+
     region: REGIONS.NORTH_AMERICA,
   },
 };

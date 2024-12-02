@@ -10,7 +10,7 @@ interface PageProps {
   };
 }
 
-async function getCityData(cityId: string) {
+async function getSalaryData(cityId: string) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/salary/${cityId}`, {
     next: {
       revalidate: 7 * 24 * 60 * 60,
@@ -46,7 +46,6 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
       },
     }).then((r) => r.json()),
   ]);
-  console.log('🚀 ~ CitiesGrid ~ costOfLivingData:', costOfLivingData);
 
   const filteredCities = Object.values(cities).filter((city) => {
     const searchTerm = searchParams?.search?.toLowerCase().trim();
@@ -59,8 +58,8 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
   });
 
   const [nycSalaryData, ...citiesSalaryData] = await Promise.all([
-    getCityData('new-york'),
-    ...filteredCities.map((city) => getCityData(city.id)),
+    getSalaryData('new-york'),
+    ...filteredCities.map((city) => getSalaryData(city.id)),
   ]);
 
   const processedCities = await Promise.all(
