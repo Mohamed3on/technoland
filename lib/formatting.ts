@@ -27,28 +27,33 @@ export function formatComparison(
 
   if (type === 'currency') {
     const formattedDiff = new Intl.NumberFormat().format(Math.abs(Math.round(diff)));
+    const formattedPercent = Math.round(Math.abs(percentDiff));
     return {
-      text: `${diff > 0 ? '+' : '-'}$${formattedDiff} compared to ${baseCityName}`,
+      text: `${diff > 0 ? '+' : '-'}$${formattedDiff} (${
+        percentDiff > 0 ? '+' : '-'
+      }${formattedPercent}%) vs ${baseCityName}`,
       color: diff > 0 ? POSITIVE_COLOR : NEGATIVE_COLOR,
     };
   }
 
   const isMoreExpensive = type === 'cost' ? percentDiff > 0 : percentDiff < 0;
   const isMorePowerful = percentDiff > 0;
-  const descriptor = type === 'cost' ? 'expensive' : 'purchasing power';
+  const formattedPercent = Math.round(Math.abs(percentDiff));
+
+  if (type === 'cost') {
+    return {
+      text: `${formattedPercent}% ${
+        isMoreExpensive ? 'more' : 'less'
+      } expensive than ${baseCityName}`,
+      color: isMoreExpensive ? NEGATIVE_COLOR : POSITIVE_COLOR,
+    };
+  }
 
   return {
-    text: `${Math.abs(percentDiff).toFixed(0)}% ${
-      type === 'cost' ? (isMoreExpensive ? 'more' : 'less') : isMorePowerful ? 'more' : 'less'
-    } ${descriptor} than ${baseCityName}`,
-    color:
-      type === 'cost'
-        ? isMoreExpensive
-          ? NEGATIVE_COLOR
-          : POSITIVE_COLOR
-        : isMorePowerful
-        ? POSITIVE_COLOR
-        : NEGATIVE_COLOR,
+    text: `${formattedPercent}% ${
+      isMorePowerful ? 'better' : 'worse'
+    } purchasing power than ${baseCityName}`,
+    color: isMorePowerful ? POSITIVE_COLOR : NEGATIVE_COLOR,
   };
 }
 
@@ -66,8 +71,9 @@ export function formatTaxComparison(
     };
   }
 
+  const formattedDiff = Math.round(Math.abs(diff));
   return {
-    text: `${Math.abs(diff).toFixed(0)}% ${diff > 0 ? 'higher' : 'lower'} tax than ${baseCityName}`,
+    text: `${formattedDiff}% ${diff > 0 ? 'higher' : 'lower'} tax than ${baseCityName}`,
     color: diff < 0 ? POSITIVE_COLOR : NEGATIVE_COLOR,
   };
 }
