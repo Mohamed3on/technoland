@@ -31,10 +31,15 @@ export async function processCityData(
   const costLookupKey = `${city.name.toLowerCase()}-${city.country.toLowerCase()}`;
   const baseCostLookupKey = `${baseCity.name.toLowerCase()}-${baseCity.country.toLowerCase()}`;
 
-  const cityIndex = costOfLivingData[costLookupKey]?.index || 100;
+  let cityIndex = costOfLivingData[costLookupKey]?.index;
+
+  if (!cityIndex) {
+    console.error(`No cost of living index found for ${city.name}`);
+    cityIndex = 100;
+  }
+
   const baseCityIndex = costOfLivingData[baseCostLookupKey]?.index || 100;
 
-  // Normalize the cost of living index relative to the base city
   const normalizedCostIndex = (cityIndex / baseCityIndex) * 100;
 
   const baseCityTaxRate = taxRates[baseCity.country.toLowerCase()] || 0;

@@ -12,6 +12,12 @@ import { formatComparison, formatTaxComparison } from '@/lib/formatting';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1444723121867-7a241cacace9';
 
+const comparisonColorMap = {
+  positive: 'text-emerald-600',
+  negative: 'text-rose-600',
+  neutral: 'text-slate-500',
+} as const;
+
 async function getCityImage(cityName: string) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/city-image?city=${cityName}`,
@@ -60,6 +66,28 @@ export function CityCardSkeleton() {
   );
 }
 
+function getNumbeoComparisonUrl(
+  city1: string,
+  state1: string,
+  country1: string,
+  city2: string,
+  state2: string,
+  country2: string
+) {
+  const formatLocation = (city: string, state: string) => {
+    // Include state in city name if it exists
+    return state ? `${city}%2C+${state}` : city.replace(/ /g, '+');
+  };
+
+  const city1Formatted = formatLocation(city1, state1);
+  const city2Formatted = formatLocation(city2, state2);
+
+  return `https://www.numbeo.com/cost-of-living/compare_cities.jsp?country1=${country1.replace(
+    / /g,
+    '+'
+  )}&city1=${city1Formatted}&country2=${country2.replace(/ /g, '+')}&city2=${city2Formatted}`;
+}
+
 export default async function CityCard({ city, rank, isBaseCity, baseCity }: CityCardProps) {
   const imageData = await getCityImage(city.name + ' ' + city.country);
 
@@ -102,20 +130,8 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
             alt={city.name}
             className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
           />
-          <div
-            className={cn(
-              'absolute top-0 left-0 right-0 bottom-0',
-              'bg-gradient-to-b from-black/50 via-transparent to-transparent',
-              'group-hover:opacity-0 transition-opacity duration-300'
-            )}
-          />
-          <div
-            className={cn(
-              'absolute top-0 left-0 right-0 bottom-0',
-              'bg-gradient-to-t from-black/80 via-black/25 to-transparent',
-              'opacity-0 group-hover:opacity-100 transition-opacity duration-300'
-            )}
-          />
+          <div className='absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-black/50 via-transparent to-transparent group-hover:opacity-0 transition-opacity duration-300' />
+          <div className='absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
 
           <div className='absolute top-4 left-4'>
             <Badge
@@ -141,7 +157,9 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
         <CardHeader className='pb-2'>
           <div>
             <h2 className='text-2xl font-bold text-gray-900'>{city.name}</h2>
-            <p className='text-base text-gray-600 mt-0.5'>{city.country}</p>
+            <p className='text-base text-gray-600 mt-0.5'>
+              {city.state ? `${city.state}, ${city.country}` : city.country}
+            </p>
           </div>
         </CardHeader>
 
@@ -149,11 +167,60 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
           <div className='space-y-4'>
             {!isBaseCity && (
               <div className='space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100'>
-                <div className={`text-sm font-medium ${purchasingPowerComparison.color}`}>
-                  {purchasingPowerComparison.text}
+                <div className='flex items-start gap-1.5'>
+                  <div
+                    className={cn(
+                      'text-sm font-medium',
+                      comparisonColorMap[purchasingPowerComparison.color]
+                    )}
+                  >
+                    {purchasingPowerComparison.text}
+                  </div>
+                  <Tip
+                    content={
+                      <div>
+                        <p className='mb-2'>
+                          This index shows how far a software engineer's salary goes in this city.
+                          <br />
+                          It's calculated as the ratio between the median software engineer salary
+                          and the city's cost of living, as compared to {baseCity.name}.
+                        </p>
+                      </div>
+                    }
+                  >
+                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5' />
+                  </Tip>
                 </div>
-                <div className={`text-sm font-medium ${costComparison.color}`}>
-                  {costComparison.text}
+                <div className='flex items-start gap-1.5'>
+                  <div
+                    className={cn('text-sm font-medium', comparisonColorMap[costComparison.color])}
+                  >
+                    {costComparison.text}
+                  </div>
+                  <Tip
+                    content={
+                      <div>
+                        <p className='mb-2'>Cost of living comparison based on Numbeo data.</p>
+                        <a
+                          href={getNumbeoComparisonUrl(
+                            city.name,
+                            city?.state || '',
+                            city.country,
+                            baseCity.name,
+                            baseCity?.state || '',
+                            baseCity.country
+                          )}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='text-blue-500 hover:underline'
+                        >
+                          View detailed comparison on Numbeo →
+                        </a>
+                      </div>
+                    }
+                  >
+                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5' />
+                  </Tip>
                 </div>
               </div>
             )}
@@ -173,19 +240,37 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                     ${new Intl.NumberFormat().format(city.medianSalary)}
                   </div>
                   {!isBaseCity && (
-                    <div className={`text-[11px] ${salaryComparison.color}`}>
+                    <div className={cn('text-[11px]', comparisonColorMap[salaryComparison.color])}>
                       {salaryComparison.text}
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <div className='text-xs text-gray-500'>Tax Rate</div>
+                  <div className='text-xs text-gray-500'>
+                    Tax Rate
+                    <Tip
+                      content={
+                        <div>
+                          <p>
+                            This is the estimated highest marginal tax rate in the country.
+                            <br />
+                            For example, in the US, this is the highest federal income tax rate. For
+                            other countries, it's the highest marginal tax rate.
+                          </p>
+                        </div>
+                      }
+                    >
+                      <InfoIcon className='h-4 w-4 text-gray-400 inline-block ml-1' />
+                    </Tip>
+                  </div>
                   <div className='font-semibold text-gray-900 text-sm'>
                     {city.taxRate.toFixed(1)}%
                   </div>
                   {!isBaseCity && (
-                    <div className={`text-[11px] ${taxComparison.color}`}>{taxComparison.text}</div>
+                    <div className={cn('text-[11px]', comparisonColorMap[taxComparison.color])}>
+                      {taxComparison.text}
+                    </div>
                   )}
                 </div>
 
@@ -195,7 +280,9 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                     ${new Intl.NumberFormat().format(Math.round(city.netSalary))}
                   </div>
                   {!isBaseCity && (
-                    <div className={`text-[11px] ${netSalaryComparison.color}`}>
+                    <div
+                      className={cn('text-[11px]', comparisonColorMap[netSalaryComparison.color])}
+                    >
                       {netSalaryComparison.text}
                     </div>
                   )}

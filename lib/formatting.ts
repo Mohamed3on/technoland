@@ -2,8 +2,12 @@ type ComparisonType = 'currency' | 'cost' | 'power';
 
 interface ComparisonResult {
   text: string;
-  color: string;
+  color: 'positive' | 'negative' | 'neutral';
 }
+
+const POSITIVE_COLOR = 'positive';
+const NEGATIVE_COLOR = 'negative';
+const NEUTRAL_COLOR = 'neutral';
 
 export function formatComparison(
   current: number,
@@ -17,7 +21,7 @@ export function formatComparison(
   if (Math.abs(diff) < 0.01) {
     return {
       text: `Same as ${baseCityName}`,
-      color: 'text-gray-500',
+      color: NEUTRAL_COLOR,
     };
   }
 
@@ -25,7 +29,7 @@ export function formatComparison(
     const formattedDiff = new Intl.NumberFormat().format(Math.abs(Math.round(diff)));
     return {
       text: `${diff > 0 ? '+' : '-'}$${formattedDiff} compared to ${baseCityName}`,
-      color: diff > 0 ? 'text-green-600' : 'text-red-600',
+      color: diff > 0 ? POSITIVE_COLOR : NEGATIVE_COLOR,
     };
   }
 
@@ -34,17 +38,17 @@ export function formatComparison(
   const descriptor = type === 'cost' ? 'expensive' : 'purchasing power';
 
   return {
-    text: `${Math.abs(percentDiff).toFixed(1)}% ${
+    text: `${Math.abs(percentDiff).toFixed(0)}% ${
       type === 'cost' ? (isMoreExpensive ? 'more' : 'less') : isMorePowerful ? 'more' : 'less'
     } ${descriptor} than ${baseCityName}`,
     color:
       type === 'cost'
         ? isMoreExpensive
-          ? 'text-red-600'
-          : 'text-green-600'
+          ? NEGATIVE_COLOR
+          : POSITIVE_COLOR
         : isMorePowerful
-        ? 'text-green-600'
-        : 'text-red-600',
+        ? POSITIVE_COLOR
+        : NEGATIVE_COLOR,
   };
 }
 
@@ -58,12 +62,12 @@ export function formatTaxComparison(
   if (Math.abs(diff) < 0.01) {
     return {
       text: `Same as ${baseCityName}`,
-      color: 'text-gray-500',
+      color: NEUTRAL_COLOR,
     };
   }
 
   return {
-    text: `${Math.abs(diff).toFixed(1)}% ${diff > 0 ? 'higher' : 'lower'} tax than ${baseCityName}`,
-    color: diff < 0 ? 'text-green-600' : 'text-red-600',
+    text: `${Math.abs(diff).toFixed(0)}% ${diff > 0 ? 'higher' : 'lower'} tax than ${baseCityName}`,
+    color: diff < 0 ? POSITIVE_COLOR : NEGATIVE_COLOR,
   };
 }

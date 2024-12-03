@@ -1,7 +1,5 @@
 import { City } from '@/types';
 
-type RegionType = (typeof REGIONS)[keyof typeof REGIONS];
-
 export const REGIONS = {
   EUROPE: 'Europe',
   NORTH_AMERICA: 'North America',
@@ -16,6 +14,7 @@ export const cities: Record<string, City> = {
   'new-york': {
     id: 'new-york',
     name: 'New York',
+    state: 'NY',
     country: 'United States',
     levelsUrl: 'new-york-usa',
 
@@ -24,6 +23,7 @@ export const cities: Record<string, City> = {
   sf: {
     id: 'sf',
     name: 'San Francisco',
+    state: 'CA',
     country: 'United States',
     levelsUrl: 'san-francisco-bay-area',
 
@@ -170,7 +170,6 @@ export const cities: Record<string, City> = {
     name: 'Cambridge',
     country: 'United Kingdom',
     levelsUrl: 'greater-cambridge-area',
-
     region: REGIONS.EUROPE,
   },
   geneva: {
@@ -332,14 +331,6 @@ export const cities: Record<string, City> = {
     levelsUrl: 'greater-helsinki',
 
     region: REGIONS.EUROPE,
-  },
-  'st-louis': {
-    id: 'st-louis',
-    name: 'St. Louis',
-    country: 'United States',
-    levelsUrl: 'st-louis-area',
-
-    region: REGIONS.NORTH_AMERICA,
   },
   houston: {
     id: 'houston',

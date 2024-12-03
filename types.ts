@@ -4,6 +4,7 @@ export interface City {
   country: string;
   levelsUrl: string;
   region: string;
+  state?: string;
 }
 
 export interface CityData extends City {
