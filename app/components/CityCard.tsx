@@ -234,13 +234,7 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
             <div className='space-y-3'>
               <div className='flex items-center gap-1'>
                 <span className='font-semibold text-gray-700 text-sm'>Median Salary</span>
-                <Tip
-                  content={
-                    <div className='bg-gradient-to-br from-gray-900 to-gray-800 text-white p-2 rounded-lg shadow-xl border border-white/10'>
-                      Based on software engineer salaries from levels.fyi
-                    </div>
-                  }
-                >
+                <Tip content={<div>Based on software engineer salaries from levels.fyi</div>}>
                   <InfoIcon className='h-4 w-4 text-gray-400 transition-colors duration-300 hover:text-blue-500' />
                 </Tip>
               </div>
@@ -248,11 +242,16 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
               <div className='grid grid-cols-3 gap-4 bg-gradient-to-br from-white to-gray-50 p-3 rounded-lg border border-gray-200/80 transition-all duration-300 hover:shadow-md'>
                 <div>
                   <div className='text-xs text-gray-500'>Gross</div>
-                  <div className='font-semibold text-gray-900 text-sm'>
+                  <div className='font-mono text-gray-900 text-sm'>
                     ${new Intl.NumberFormat().format(city.medianSalary)}
                   </div>
                   {!isBaseCity && (
-                    <div className={cn('text-[11px]', comparisonColorMap[salaryComparison.color])}>
+                    <div
+                      className={cn(
+                        'text-[11px] font-mono',
+                        comparisonColorMap[salaryComparison.color]
+                      )}
+                    >
                       {salaryComparison.text}
                     </div>
                   )}
@@ -264,23 +263,22 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                     <Tip
                       content={
                         <div>
-                          <p>
-                            This is the estimated highest marginal tax rate in the country.
-                            <br />
-                            For example, in the US, this is the highest federal income tax rate. For
-                            other countries, it's the highest marginal tax rate.
-                          </p>
+                          This is the highest marginal income tax rate in the country. For example,
+                          in the US this is the highest federal tax rate.
                         </div>
                       }
                     >
                       <InfoIcon className='h-4 w-4 text-gray-400 inline-block ml-1' />
                     </Tip>
                   </div>
-                  <div className='font-semibold text-gray-900 text-sm'>
-                    {city.taxRate.toFixed(1)}%
-                  </div>
+                  <div className='font-mono text-gray-900 text-sm'>{city.taxRate.toFixed(1)}%</div>
                   {!isBaseCity && (
-                    <div className={cn('text-[11px]', comparisonColorMap[taxComparison.color])}>
+                    <div
+                      className={cn(
+                        'text-[11px] font-mono',
+                        comparisonColorMap[taxComparison.color]
+                      )}
+                    >
                       {taxComparison.text}
                     </div>
                   )}
@@ -288,12 +286,15 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
 
                 <div>
                   <div className='text-xs text-gray-500'>Net</div>
-                  <div className='font-semibold text-gray-900 text-sm'>
+                  <div className='font-mono text-gray-900 text-sm'>
                     ${new Intl.NumberFormat().format(Math.round(city.netSalary))}
                   </div>
                   {!isBaseCity && (
                     <div
-                      className={cn('text-[11px]', comparisonColorMap[netSalaryComparison.color])}
+                      className={cn(
+                        'text-[11px] font-mono',
+                        comparisonColorMap[netSalaryComparison.color]
+                      )}
                     >
                       {netSalaryComparison.text}
                     </div>
