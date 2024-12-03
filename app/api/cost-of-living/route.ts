@@ -5,8 +5,6 @@ import type { CostOfLivingData } from '@/lib/fallbackCostOfLiving';
 
 const NUMBEO_URL = 'https://www.numbeo.com/cost-of-living/rankings_current.jsp?displayColumn=2';
 
-export const dynamic = 'force-static';
-
 async function getCostOfLivingData(): Promise<CostOfLivingData> {
   try {
     const response = await fetch(NUMBEO_URL, {

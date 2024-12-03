@@ -54,23 +54,63 @@ export function CityCardSkeleton() {
     <Card className='overflow-hidden h-full'>
       <div className='relative h-48'>
         <Skeleton className='w-full h-full' />
+        <div className='absolute top-4 left-4'>
+          <Skeleton className='h-8 w-16 rounded-full' />
+        </div>
       </div>
+
       <CardHeader className='pb-2'>
         <div className='space-y-2'>
-          <Skeleton className='h-6 w-32' />
-          <Skeleton className='h-4 w-24' />
+          <Skeleton className='h-8 w-40' />
+          <Skeleton className='h-5 w-32' />
         </div>
       </CardHeader>
+
       <CardContent>
-        <div className='space-y-3'>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className='flex justify-between items-center'>
-              <Skeleton className='h-4 w-24' />
-              <Skeleton className='h-4 w-16' />
+        <div className='space-y-4'>
+          {/* Purchasing Power & Cost Section */}
+          <div className='space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100'>
+            <div className='flex items-center'>
+              <Skeleton className='h-5 w-64' />
             </div>
-          ))}
+            <div className='flex items-center'>
+              <Skeleton className='h-5 w-56' />
+            </div>
+          </div>
+
+          {/* Salary Section */}
+          <div className='space-y-3'>
+            <div className='flex items-center gap-1'>
+              <Skeleton className='h-5 w-24' />
+            </div>
+
+            <div className='grid grid-cols-3 gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100'>
+              <div className='space-y-1'>
+                <Skeleton className='h-4 w-12' />
+                <Skeleton className='h-5 w-20' />
+                <Skeleton className='h-3 w-16' />
+              </div>
+              <div className='space-y-1'>
+                <Skeleton className='h-4 w-16' />
+                <Skeleton className='h-5 w-16' />
+                <Skeleton className='h-3 w-14' />
+              </div>
+              <div className='space-y-1'>
+                <Skeleton className='h-4 w-12' />
+                <Skeleton className='h-5 w-20' />
+                <Skeleton className='h-3 w-16' />
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
+
+      <CardFooter className='pt-2'>
+        <div className='flex items-center justify-between w-full'>
+          <Skeleton className='h-6 w-24 rounded-full' />
+          <Skeleton className='h-9 w-24' />
+        </div>
+      </CardFooter>
     </Card>
   );
 }
@@ -190,63 +230,68 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
           <div className='space-y-4'>
             {!isBaseCity && (
               <div className='space-y-2 bg-gradient-to-br from-blue-50 to-violet-50 p-3 rounded-lg border border-blue-100/50 transition-all duration-300 hover:shadow-md'>
-                <div className='flex items-start gap-1.5'>
+                <div>
                   <div
                     className={cn(
-                      'text-sm font-medium',
+                      'text-sm font-medium max-w-[90%]',
                       comparisonColorMap[purchasingPowerComparison.color]
                     )}
                   >
-                    {purchasingPowerComparison.text}
+                    <div className='inline '>
+                      {purchasingPowerComparison.text}
+                      <Tip
+                        content={
+                          <div className='max-w-xs'>
+                            <p>
+                              This index shows how far a software engineer's salary goes in this
+                              city.
+                              <br />
+                              It's calculated as the ratio between the median software engineer
+                              salary and the city's cost of living, as compared to {baseCity.name}.
+                            </p>
+                          </div>
+                        }
+                      >
+                        <InfoIcon className='h-4 w-4 text-gray-400 inline-block ml-1 hover:text-blue-500 transition-colors duration-300' />
+                      </Tip>
+                    </div>
                   </div>
-                  <Tip
-                    content={
-                      <div className='max-w-xs'>
-                        <p>
-                          This index shows how far a software engineer's salary goes in this city.
-                          <br />
-                          It's calculated as the ratio between the median software engineer salary
-                          and the city's cost of living, as compared to {baseCity.name}.
-                        </p>
-                      </div>
-                    }
-                  >
-                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5 transition-colors duration-300 hover:text-blue-500' />
-                  </Tip>
                 </div>
-                <div className='flex items-start gap-1.5'>
+                <div>
                   <div
                     className={cn('text-sm font-medium', comparisonColorMap[costComparison.color])}
                   >
-                    {costComparison.text}
+                    <div className='inline'>
+                      {costComparison.text}
+                      <Tip
+                        content={
+                          <div>
+                            <p className='mb-2'>Cost of living comparison based on Numbeo data.</p>
+                            <Link
+                              href={getNumbeoComparisonUrl(
+                                city.name,
+                                city?.state || '',
+                                city.country,
+                                baseCity.name,
+                                baseCity?.state || '',
+                                baseCity.country
+                              )}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='text-violet-200 hover:text-violet-100 font-medium transition-colors duration-300 flex items-center gap-1 group underline decoration-violet-200/30 hover:decoration-violet-200/50 underline-offset-2'
+                            >
+                              View detailed comparison on Numbeo
+                              <span className='group-hover:translate-x-0.5 transition-transform duration-300'>
+                                →
+                              </span>
+                            </Link>
+                          </div>
+                        }
+                      >
+                        <InfoIcon className='h-4 w-4 text-gray-400 inline-block ml-1 hover:text-blue-500 transition-colors duration-300' />
+                      </Tip>
+                    </div>
                   </div>
-                  <Tip
-                    content={
-                      <div>
-                        <p className='mb-2'>Cost of living comparison based on Numbeo data.</p>
-                        <Link
-                          href={getNumbeoComparisonUrl(
-                            city.name,
-                            city?.state || '',
-                            city.country,
-                            baseCity.name,
-                            baseCity?.state || '',
-                            baseCity.country
-                          )}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className='text-violet-200 hover:text-violet-100 font-medium transition-colors duration-300 flex items-center gap-1 group underline decoration-violet-200/30 hover:decoration-violet-200/50 underline-offset-2'
-                        >
-                          View detailed comparison on Numbeo
-                          <span className='group-hover:translate-x-0.5 transition-transform duration-300'>
-                            →
-                          </span>
-                        </Link>
-                      </div>
-                    }
-                  >
-                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5 transition-colors duration-300 hover:text-blue-500' />
-                  </Tip>
                 </div>
               </div>
             )}

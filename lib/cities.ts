@@ -730,4 +730,12 @@ export const cities: Record<string, City> = {
 
     region: REGIONS.NORTH_AMERICA,
   },
+  sacramento: {
+    id: 'sacramento',
+    name: 'Sacramento',
+    country: 'United States',
+    levelsUrl: 'greater-sacramento-area',
+
+    region: REGIONS.NORTH_AMERICA,
+  },
 };

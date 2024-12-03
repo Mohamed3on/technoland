@@ -12,7 +12,7 @@ interface PageProps {
 }
 
 async function getSalaryData(cityId: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/salary/${cityId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/salary/${cityId}`, {
     next: {
       revalidate: 7 * 24 * 60 * 60,
     },
@@ -26,7 +26,7 @@ async function getSalaryData(cityId: string) {
 
 function LoadingGrid() {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full animate-pulse'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
       {[...Array(6)].map((_, i) => (
         <CityCardSkeleton key={i} />
       ))}
