@@ -1,5 +1,7 @@
 import { City } from '@/types';
 
+export const LEVELS_BASE_URL = 'https://www.levels.fyi/t/software-engineer/locations/';
+
 export const REGIONS = {
   EUROPE: 'Europe',
   NORTH_AMERICA: 'North America',
@@ -127,7 +129,6 @@ export const cities: Record<string, City> = {
     name: 'Abu Dhabi',
     country: 'United Arab Emirates',
     levelsUrl: 'united-arab-emirates',
-
     region: REGIONS.MIDDLE_EAST,
   },
   singapore: {

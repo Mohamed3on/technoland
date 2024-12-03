@@ -10,6 +10,7 @@ import { CompareButton } from './CompareButton';
 import { cn } from '@/lib/utils';
 import { formatComparison, formatTaxComparison } from '@/lib/formatting';
 import Link from 'next/link';
+import { LEVELS_BASE_URL } from '@/lib/cities';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1444723121867-7a241cacace9';
 
@@ -19,7 +20,13 @@ const comparisonColorMap = {
   neutral: 'text-slate-500',
 } as const;
 
-async function getCityImage(cityName: string) {
+interface UnsplashImageData {
+  imageUrl: string;
+  photographer: string;
+  photographerUrl: string;
+}
+
+async function getCityImage(cityName: string): Promise<UnsplashImageData> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/city-image?city=${cityName}`,
     { next: { revalidate: 60 * 60 * 24 } }
@@ -28,7 +35,8 @@ async function getCityImage(cityName: string) {
     return {
       imageUrl: PLACEHOLDER_IMAGE,
       photographer: 'Thaddaeus Lim',
-      photographerUrl: 'https://unsplash.com/@thaddaeuslee',
+      photographerUrl:
+        'https://unsplash.com/@thaddaeuslee?utm_source=technoland&utm_medium=referral',
     };
   }
   return response.json();
@@ -90,7 +98,7 @@ function getNumbeoComparisonUrl(
 }
 
 export default async function CityCard({ city, rank, isBaseCity, baseCity }: CityCardProps) {
-  const imageData = await getCityImage(city.name + ' ' + city.country);
+  const imageData = await getCityImage(city.name);
 
   const salaryComparison = formatComparison(
     city.medianSalary,
@@ -144,14 +152,26 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
           </div>
 
           {imageData?.photographer && (
-            <a
-              href={imageData.photographerUrl}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='absolute bottom-2 right-2 text-xs text-white opacity-50 hover:opacity-100 z-10 transition-opacity duration-300'
-            >
-              Photo by {imageData.photographer}
-            </a>
+            <div className='absolute bottom-2 right-2 text-xs text-white/80 hover:text-white z-10 transition-opacity duration-300 flex items-center gap-1'>
+              <span>Photo by</span>
+              <a
+                href={`${imageData.photographerUrl}?utm_source=tech_salaries&utm_medium=referral`}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='hover:underline font-medium'
+              >
+                {imageData.photographer}
+              </a>
+              <span>on</span>
+              <a
+                href='https://unsplash.com/?utm_source=tech_salaries&utm_medium=referral'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='hover:underline font-medium'
+              >
+                Unsplash
+              </a>
+            </div>
           )}
         </div>
 
@@ -234,7 +254,24 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
             <div className='space-y-3'>
               <div className='flex items-center gap-1'>
                 <span className='font-semibold text-gray-700 text-sm'>Median Salary</span>
-                <Tip content={<div>Based on software engineer salaries from levels.fyi</div>}>
+                <Tip
+                  content={
+                    <div>
+                      Based on software engineer salaries from levels.fyi
+                      <Link
+                        href={`${LEVELS_BASE_URL}${city.levelsUrl}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='text-violet-200 hover:text-violet-100 font-medium transition-colors duration-300 flex items-center gap-1 group mt-1'
+                      >
+                        View on levels.fyi
+                        <span className='group-hover:translate-x-0.5 transition-transform duration-300'>
+                          →
+                        </span>
+                      </Link>
+                    </div>
+                  }
+                >
                   <InfoIcon className='h-4 w-4 text-gray-400 transition-colors duration-300 hover:text-blue-500' />
                 </Tip>
               </div>

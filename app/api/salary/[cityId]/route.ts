@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
-import { cities } from '@/lib/cities';
-
-const LEVELS_BASE_URL = 'https://www.levels.fyi/t/software-engineer/locations/';
+import { cities, LEVELS_BASE_URL } from '@/lib/cities';
 
 export async function GET(request: Request, { params }: { params: Promise<{ cityId: string }> }) {
   try {
