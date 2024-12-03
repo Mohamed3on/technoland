@@ -19,26 +19,33 @@ export function calculateTechCityIndex(
 export async function processCityData(
   city: City,
   salaryData: { medianSalary: number },
-  nycSalary: number,
+  baseCitySalary: number,
   taxRates: Record<string, number>,
-  costOfLivingData: Record<string, { index: number }>
+  costOfLivingData: Record<string, { index: number }>,
+  baseCity: City
 ): Promise<CityData> {
   const taxRate = taxRates[city.country.toLowerCase()] || 0;
   const grossSalary = salaryData.medianSalary;
   const netSalary = grossSalary * (1 - taxRate / 100);
 
   const costLookupKey = `${city.name.toLowerCase()}-${city.country.toLowerCase()}`;
-  const costIndex = costOfLivingData[costLookupKey]?.index;
+  const baseCostLookupKey = `${baseCity.name.toLowerCase()}-${baseCity.country.toLowerCase()}`;
 
-  const nycTaxRate = taxRates['united states'] || 0;
-  const nycNetSalary = nycSalary * (1 - nycTaxRate / 100);
+  const cityIndex = costOfLivingData[costLookupKey]?.index || 100;
+  const baseCityIndex = costOfLivingData[baseCostLookupKey]?.index || 100;
+
+  // Normalize the cost of living index relative to the base city
+  const normalizedCostIndex = (cityIndex / baseCityIndex) * 100;
+
+  const baseCityTaxRate = taxRates[baseCity.country.toLowerCase()] || 0;
+  const baseCityNetSalary = baseCitySalary * (1 - baseCityTaxRate / 100);
 
   return {
     ...city,
     medianSalary: grossSalary,
     netSalary,
     taxRate,
-    costOfLivingIndex: costIndex,
-    techCityIndex: calculateTechCityIndex(netSalary, costIndex, nycNetSalary),
+    costOfLivingIndex: normalizedCostIndex,
+    techCityIndex: calculateTechCityIndex(netSalary, normalizedCostIndex, baseCityNetSalary),
   };
 }

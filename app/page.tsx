@@ -7,6 +7,7 @@ import { processCityData } from '@/lib/utils';
 interface PageProps {
   searchParams: {
     search?: string;
+    baseCity?: string;
   };
 }
 
@@ -47,6 +48,13 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
     }).then((r) => r.json()),
   ]);
 
+  const baseCityId = searchParams?.baseCity || 'sf';
+  const baseCity = cities[baseCityId];
+
+  if (!baseCity) {
+    throw new Error('Invalid base city');
+  }
+
   const filteredCities = Object.values(cities).filter((city) => {
     const searchTerm = searchParams?.search?.toLowerCase().trim();
     if (!searchTerm) return true;
@@ -57,19 +65,29 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
     );
   });
 
-  const [nycSalaryData, ...citiesSalaryData] = await Promise.all([
-    getSalaryData('new-york'),
+  const [baseCitySalaryData, ...citiesSalaryData] = await Promise.all([
+    getSalaryData(baseCityId),
     ...filteredCities.map((city) => getSalaryData(city.id)),
   ]);
+
+  const processedBaseCity = await processCityData(
+    baseCity,
+    baseCitySalaryData,
+    baseCitySalaryData.medianSalary,
+    taxRates,
+    costOfLivingData,
+    baseCity
+  );
 
   const processedCities = await Promise.all(
     filteredCities.map((city, index) =>
       processCityData(
         city,
         citiesSalaryData[index],
-        nycSalaryData.medianSalary,
+        baseCitySalaryData.medianSalary,
         taxRates,
-        costOfLivingData
+        costOfLivingData,
+        baseCity
       )
     )
   );
@@ -79,7 +97,13 @@ async function CitiesGrid({ searchParams }: { searchParams: PageProps['searchPar
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
       {sortedCities.map((city, index) => (
-        <CityCard key={city.id} city={city} rank={index + 1} />
+        <CityCard
+          key={city.id}
+          city={city}
+          rank={index + 1}
+          isBaseCity={city.id === baseCityId}
+          baseCity={processedBaseCity}
+        />
       ))}
     </div>
   );
@@ -93,19 +117,22 @@ export default async function Home({
   const fullSearchParams = await searchParams;
 
   return (
-    <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
-      <div className='text-center mb-12'>
-        <h1 className='text-5xl font-bold text-gray-900 mb-4'>Tech Cities Index</h1>
-        <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
+    <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='text-center pt-8 pb-6'>
+        <h1 className='text-4xl sm:text-5xl font-bold text-gray-900 mb-4'>Tech Cities Index</h1>
+        <p className='text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto'>
           Explore and compare tech hubs worldwide based on salary, cost of living, and overall tech
           opportunity index.
         </p>
       </div>
 
       <SearchBar />
-      <Suspense fallback={<LoadingGrid />}>
-        <CitiesGrid searchParams={fullSearchParams} />
-      </Suspense>
+
+      <div className='py-8'>
+        <Suspense fallback={<LoadingGrid />}>
+          <CitiesGrid searchParams={fullSearchParams} />
+        </Suspense>
+      </div>
     </div>
   );
 }

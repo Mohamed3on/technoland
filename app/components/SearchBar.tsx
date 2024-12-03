@@ -1,15 +1,28 @@
 'use client';
 
+import * as React from 'react';
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-
-import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cities } from '@/lib/cities';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useTransition } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function SearchBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const [open, setOpen] = React.useState(false);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -32,20 +45,94 @@ export default function SearchBar() {
     });
   };
 
+  const handleBaseCity = (cityId: string) => {
+    startTransition(() => {
+      router.replace(`/?${createQueryString('baseCity', cityId)}`);
+    });
+  };
+
+  const currentBaseCity = searchParams.get('baseCity') || cities['sf'].id;
+  const citiesArray = Object.values(cities).sort((a, b) => {
+    const nameComparison = a.name.localeCompare(b.name);
+    return nameComparison !== 0 ? nameComparison : a.country.localeCompare(b.country);
+  });
+
   return (
-    <div className='space-y-4 mb-8'>
-      <div className='relative flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-3xl mx-auto px-4 sm:px-0'>
-        {isPending && (
-          <div className='absolute -top-6 right-4 sm:right-0'>
-            <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
+    <div className='sticky top-16 z-40 border-b border-gray-200'>
+      <div className='bg-white/80 backdrop-blur-md py-4'>
+        <div className='max-w-3xl mx-auto px-4 sm:px-6'>
+          <div className='relative flex flex-col sm:flex-row gap-3 sm:gap-4'>
+            {isPending && (
+              <div className='absolute -top-4 right-4 sm:right-0'>
+                <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
+              </div>
+            )}
+            <div className='relative flex-1 flex flex-col justify-end'>
+              <div className='mb-2 text-xs leading-tight'>
+                <span className='font-medium text-gray-700'>Search cities</span>{' '}
+                <span className='text-gray-500'>— filter by city, country, or region</span>
+              </div>
+              <Input
+                placeholder='Try "United States", "Europe", or "Berlin"'
+                className={`w-full rounded-xl border-gray-200 bg-white shadow-sm hover:border-gray-300 focus:border-gray-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 ${
+                  isPending ? 'opacity-70' : ''
+                }`}
+                defaultValue={searchParams.get('search') || ''}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </div>
+            <div className='w-full sm:w-[280px]'>
+              <div className='mb-2 text-xs leading-tight'>
+                <span className='font-medium text-gray-700'>Base City</span>{' '}
+                <span className='text-gray-500'>— comparisons will be made against this city</span>
+              </div>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant='outline'
+                    role='combobox'
+                    aria-expanded={open}
+                    className='w-full justify-between rounded-xl border-gray-200 bg-white shadow-sm hover:border-gray-300'
+                  >
+                    {currentBaseCity
+                      ? `${cities[currentBaseCity].name}, ${cities[currentBaseCity].country}`
+                      : 'Select base city...'}
+                    <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className='w-[280px] p-0'>
+                  <Command>
+                    <CommandInput placeholder='Search base city...' />
+                    <CommandList>
+                      <CommandEmpty>No city found.</CommandEmpty>
+                      <CommandGroup>
+                        {citiesArray.map((city) => (
+                          <CommandItem
+                            key={city.id}
+                            value={city.id}
+                            onSelect={(currentValue) => {
+                              handleBaseCity(currentValue);
+                              setOpen(false);
+                            }}
+                          >
+                            <span>
+                              {city.name}, {city.country}
+                            </span>
+                            <Check
+                              className={cn(
+                                'ml-auto h-4 w-4',
+                                currentBaseCity === city.id ? 'opacity-100' : 'opacity-0'
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
-        )}
-        <div className='relative flex-1'>
-          <Input
-            placeholder='Search cities, countries or regions...'
-            className={`w-full ${isPending ? 'opacity-70' : ''}`}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
         </div>
       </div>
     </div>
