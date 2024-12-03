@@ -118,12 +118,31 @@ export default async function Home({
 
   return (
     <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-      <div className='text-center pt-8 pb-6'>
-        <h1 className='text-4xl sm:text-5xl font-bold text-gray-900 mb-4'>Tech Cities Index</h1>
-        <p className='text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto'>
+      <div className='text-center pt-8 pb-6 space-y-4 animate-fade-in'>
+        <h1 className='text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 bg-clip-text text-transparent animate-gradient'>
+          Tech Cities Index
+        </h1>
+        <p className='text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed'>
           Explore and compare tech hubs worldwide based on salary, cost of living, and overall tech
           opportunity index.
         </p>
+        <div className='flex justify-center gap-2 pt-2'>
+          <div className='px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-sm font-medium animate-float'>
+            🌍 90+ Cities
+          </div>
+          <div
+            className='px-4 py-2 rounded-full bg-gradient-to-r from-violet-100 to-violet-50 text-violet-700 text-sm font-medium animate-float'
+            style={{ animationDelay: '0.2s' }}
+          >
+            💰 Real Salary Data
+          </div>
+          <div
+            className='px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 text-sm font-medium animate-float'
+            style={{ animationDelay: '0.4s' }}
+          >
+            📊 Live Cost of Living Data
+          </div>
+        </div>
       </div>
 
       <SearchBar />

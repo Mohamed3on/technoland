@@ -1,3 +1,4 @@
+import { CostOfLivingData } from '@/lib/fallbackCostOfLiving';
 import { City, CityData } from '@/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -21,7 +22,7 @@ export async function processCityData(
   salaryData: { medianSalary: number },
   baseCitySalary: number,
   taxRates: Record<string, number>,
-  costOfLivingData: Record<string, { index: number }>,
+  costOfLivingData: CostOfLivingData,
   baseCity: City
 ): Promise<CityData> {
   const taxRate = taxRates[city.country.toLowerCase()] || 0;
@@ -47,6 +48,7 @@ export async function processCityData(
 
   return {
     ...city,
+    state: costOfLivingData[costLookupKey]?.state,
     medianSalary: grossSalary,
     netSalary,
     taxRate,

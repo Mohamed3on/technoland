@@ -34,7 +34,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ city
 
     const medianSalaryH3 = medianTotalCompP.siblings('h3').first();
     if (!medianSalaryH3.length) {
-      console.log('Could not find median salary');
+      console.error('Could not find median salary');
       return NextResponse.json({ error: 'Could not find median salary' }, { status: 500 });
     }
 

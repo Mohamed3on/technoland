@@ -20,7 +20,7 @@ const TooltipContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        'z-50 overflow-hidden rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className
       )}
       {...props}
@@ -35,17 +35,31 @@ const Tip = ({
   className,
 }: React.PropsWithChildren<{ content: string | React.ReactNode; className?: string }>) => {
   const [open, setOpen] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout>();
+
+  const handleOpen = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 100); // Small delay to allow moving cursor to content
+  };
 
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider>
       <Tooltip open={open}>
         <TooltipTrigger asChild>
           <button
             type='button'
             className={cn('cursor-pointer', className)}
             onClick={() => setOpen(!open)}
-            onMouseEnter={() => setOpen(true)}
-            onMouseLeave={() => setOpen(false)}
+            onMouseEnter={handleOpen}
+            onMouseLeave={handleClose}
             onTouchStart={() => setOpen(!open)}
             onKeyDown={(e) => {
               e.preventDefault();
@@ -55,8 +69,12 @@ const Tip = ({
             {children}
           </button>
         </TooltipTrigger>
-        <TooltipContent className={!content ? 'hidden' : ''}>
-          <span className='inline-block'>{content}</span>
+        <TooltipContent
+          className={cn(!content ? 'hidden' : '')}
+          onMouseEnter={handleOpen}
+          onMouseLeave={handleClose}
+        >
+          <span className='inline-block select-text'>{content}</span>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

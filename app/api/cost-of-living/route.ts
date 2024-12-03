@@ -48,7 +48,7 @@ function parseCostOfLivingData(html: string): CostOfLivingData {
 
     const locationParts = fullLocation.split(', ');
     if (locationParts.length < 2) {
-      console.log('locationParts', locationParts);
+      console.error('Invalid location:', fullLocation);
       return;
     }
 

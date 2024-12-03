@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { CompareButton } from './CompareButton';
 import { cn } from '@/lib/utils';
 import { formatComparison, formatTaxComparison } from '@/lib/formatting';
+import Link from 'next/link';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1444723121867-7a241cacace9';
 
@@ -113,10 +114,10 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
 
   return (
     <Suspense fallback={<CityCardSkeleton />}>
-      <Card className='overflow-hidden h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg relative'>
+      <Card className='overflow-hidden h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-xl relative bg-white/80 backdrop-blur-sm border-white/60 animate-fade-in-up'>
         {isBaseCity && (
           <div className='absolute -right-8 top-8 rotate-45 z-10'>
-            <div className='bg-gradient-to-r from-blue-500 to-blue-600 text-white py-1 px-10 text-xs font-medium shadow-lg'>
+            <div className='bg-gradient-to-r from-blue-500 to-violet-500 text-white py-1 px-10 text-xs font-medium shadow-lg animate-gradient'>
               Base City
             </div>
           </div>
@@ -128,15 +129,15 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
             height={400}
             src={imageData?.imageUrl || ''}
             alt={city.name}
-            className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
+            className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
           />
-          <div className='absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-black/50 via-transparent to-transparent group-hover:opacity-0 transition-opacity duration-300' />
-          <div className='absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+          <div className='absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-black/50 via-transparent to-transparent group-hover:opacity-0 transition-opacity duration-500' />
+          <div className='absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
 
           <div className='absolute top-4 left-4'>
             <Badge
               variant='custom'
-              className='bg-gradient-to-r from-blue-500/95 to-blue-600/95 backdrop-blur-sm text-white px-4 py-1.5 text-base font-semibold shadow-lg ring-2 ring-white/20'
+              className='bg-gradient-to-r from-blue-500/95 to-violet-500/95 backdrop-blur-sm text-white px-4 py-1.5 text-base font-semibold shadow-lg ring-2 ring-white/20 animate-float'
             >
               #{rank}
             </Badge>
@@ -147,7 +148,7 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
               href={imageData.photographerUrl}
               target='_blank'
               rel='noopener noreferrer'
-              className='absolute bottom-2 right-2 text-xs text-white opacity-50 hover:opacity-100 z-10'
+              className='absolute bottom-2 right-2 text-xs text-white opacity-50 hover:opacity-100 z-10 transition-opacity duration-300'
             >
               Photo by {imageData.photographer}
             </a>
@@ -156,7 +157,9 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
 
         <CardHeader className='pb-2'>
           <div>
-            <h2 className='text-2xl font-bold text-gray-900'>{city.name}</h2>
+            <h2 className='text-2xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'>
+              {city.name}
+            </h2>
             <p className='text-base text-gray-600 mt-0.5'>
               {city.state ? `${city.state}, ${city.country}` : city.country}
             </p>
@@ -166,7 +169,7 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
         <CardContent>
           <div className='space-y-4'>
             {!isBaseCity && (
-              <div className='space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-100'>
+              <div className='space-y-2 bg-gradient-to-br from-blue-50 to-violet-50 p-3 rounded-lg border border-blue-100/50 transition-all duration-300 hover:shadow-md'>
                 <div className='flex items-start gap-1.5'>
                   <div
                     className={cn(
@@ -178,8 +181,8 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                   </div>
                   <Tip
                     content={
-                      <div>
-                        <p className='mb-2'>
+                      <div className='max-w-xs'>
+                        <p>
                           This index shows how far a software engineer's salary goes in this city.
                           <br />
                           It's calculated as the ratio between the median software engineer salary
@@ -188,7 +191,7 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                       </div>
                     }
                   >
-                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5' />
+                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5 transition-colors duration-300 hover:text-blue-500' />
                   </Tip>
                 </div>
                 <div className='flex items-start gap-1.5'>
@@ -201,7 +204,7 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                     content={
                       <div>
                         <p className='mb-2'>Cost of living comparison based on Numbeo data.</p>
-                        <a
+                        <Link
                           href={getNumbeoComparisonUrl(
                             city.name,
                             city?.state || '',
@@ -212,14 +215,17 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
                           )}
                           target='_blank'
                           rel='noopener noreferrer'
-                          className='text-blue-500 hover:underline'
+                          className='text-violet-200 hover:text-violet-100 font-medium transition-colors duration-300 flex items-center gap-1 group underline decoration-violet-200/30 hover:decoration-violet-200/50 underline-offset-2'
                         >
-                          View detailed comparison on Numbeo →
-                        </a>
+                          View detailed comparison on Numbeo
+                          <span className='group-hover:translate-x-0.5 transition-transform duration-300'>
+                            →
+                          </span>
+                        </Link>
                       </div>
                     }
                   >
-                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5' />
+                    <InfoIcon className='h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5 transition-colors duration-300 hover:text-blue-500' />
                   </Tip>
                 </div>
               </div>
@@ -228,12 +234,18 @@ export default async function CityCard({ city, rank, isBaseCity, baseCity }: Cit
             <div className='space-y-3'>
               <div className='flex items-center gap-1'>
                 <span className='font-semibold text-gray-700 text-sm'>Median Salary</span>
-                <Tip content='Based on software engineer salaries from levels.fyi'>
-                  <InfoIcon className='h-4 w-4 text-gray-400' />
+                <Tip
+                  content={
+                    <div className='bg-gradient-to-br from-gray-900 to-gray-800 text-white p-2 rounded-lg shadow-xl border border-white/10'>
+                      Based on software engineer salaries from levels.fyi
+                    </div>
+                  }
+                >
+                  <InfoIcon className='h-4 w-4 text-gray-400 transition-colors duration-300 hover:text-blue-500' />
                 </Tip>
               </div>
 
-              <div className='grid grid-cols-3 gap-4 bg-white p-3 rounded-lg border border-gray-200'>
+              <div className='grid grid-cols-3 gap-4 bg-gradient-to-br from-white to-gray-50 p-3 rounded-lg border border-gray-200/80 transition-all duration-300 hover:shadow-md'>
                 <div>
                   <div className='text-xs text-gray-500'>Gross</div>
                   <div className='font-semibold text-gray-900 text-sm'>

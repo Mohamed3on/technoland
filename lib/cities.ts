@@ -14,7 +14,6 @@ export const cities: Record<string, City> = {
   'new-york': {
     id: 'new-york',
     name: 'New York',
-    state: 'NY',
     country: 'United States',
     levelsUrl: 'new-york-usa',
 
@@ -23,7 +22,6 @@ export const cities: Record<string, City> = {
   sf: {
     id: 'sf',
     name: 'San Francisco',
-    state: 'CA',
     country: 'United States',
     levelsUrl: 'san-francisco-bay-area',
 
@@ -34,7 +32,6 @@ export const cities: Record<string, City> = {
     name: 'London',
     country: 'United Kingdom',
     levelsUrl: 'london-metro-area',
-
     region: REGIONS.EUROPE,
   },
   dubai: {
